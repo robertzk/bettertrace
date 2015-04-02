@@ -97,6 +97,7 @@ call_text <- function(call) {
 }
 
 trim_call <- function(pre_call_text) {
+  pre_call_text <- paste(pre_call_text, collapse = "\n")
   call_text <- strtrim(pre_call_text, 120)
   if (nchar(pre_call_text) > 120) {
     call_text <- paste0(call_text, " [...]")
