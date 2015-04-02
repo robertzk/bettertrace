@@ -2,6 +2,24 @@
 #'
 #' To use, call \options{error = stacktrace}, which will be called
 #' by default when this package is loaded.
+#'
+#' @export
+#' @examples
+#' \dontrun{
+#'   # /Users/you/tmp/foo.R
+#'   foo <- function() { bar() + 1 }
+#'   bar <- function() { baz() + 2 }
+#'  
+#'   # R console
+#'   source("~/tmp/foo.R")
+#'   foo()
+#'   # Error in bar() : could not find function "baz"
+#'   # In global environment: foo()
+#'   # In /Users/robertk/tmp/foo.R:1: bar() + 1
+#'   # In /Users/robertk/tmp/foo.R:2: baz() + 2
+#'   # 
+#'   # could not find function "baz"
+#' }
 stacktrace <- function() {
   n     <- length(sys.calls())
   trace <- Map(call_description, sys.calls(), sys.frames())
