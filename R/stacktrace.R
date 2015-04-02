@@ -63,7 +63,8 @@ ref_text <- function(frame, ref) {
   file <- attr(ref, "srcfile")$filename
   if (nzchar(file)) {
     file <- normalizePath(file)
-    paste0(file, ":", ref[1L], ": ", trim_call(as.character(ref)))
+    paste0(decorate_file(file), ":", crayon::bold(as.character(ref[1L])),
+           ": ", trim_call(as.character(ref)))
   } else {
     frame_text(frame)
   }
@@ -119,4 +120,8 @@ safe_color <- function(msg, color) {
   } else {
     get(color)(msg)
   }
+}
+
+decorate_file <- function(file) {
+  file.path(dirname(file), crayon::yellow(basename(file)))
 }
