@@ -5,11 +5,18 @@
 stacktrace <- function() {
   n     <- length(sys.calls())
   trace <- Map(call_description, sys.calls(), sys.frames())
+  trace <- strip_hidden(trace)
   msg   <- sanitize_message(geterrmessage())
 
-  cat(
-    paste(trace, collapse = "\n"), "\n\n", crayon::red(msg)
-  )
+  if (length(trace) > 1) {
+    cat(sep = "",
+      paste(trace, collapse = "\n"), "\n\n",
+      if (!is.na(msg)) {
+        paste0(crayon::bold("Error"), ": ", safe_color(msg, "red"))
+      }
+    )
+  }
+  invisible(trace)
 }
 
 call_description <- function(call, frame) {
@@ -22,7 +29,12 @@ call_description <- function(call, frame) {
 }
 
 package_description <- function(call, frame) {
-  paste0("In ", frame_text(frame), ": ", call_text(call))
+  frame_info <- frame_text(frame)
+  text <- paste0("In ", frame_info, ": ", call_text(call))
+  if (!is.null(pkg <- attr(frame_info, "pkg"))) {
+    attr(text, "pkg") <- pkg
+  }
+  text
 }
 
 file_description <- function(call, frame, ref) {
@@ -43,12 +55,20 @@ frame_text <- function(frame) {
   if (identical(frame, .GlobalEnv)) {
     "global environment"
   } else if (nzchar(name <- environmentName(frame))) {
-    if (grepl("^(package|imports):", name)) {
-      paste("package", crayon::green(strsplit(name, ":")[[1]][2]))
+    if (isNamespace(frame)) {
+      structure(pkg = name,
+        paste("package internals of", crayon::green(name))
+      )
+    } else if (grepl("^(package|imports):", name)) {
+      pkg_name <- strsplit(name, ":")[[1]][2]
+      structure(pkg = pkg_name,
+        paste("package", crayon::green(pkg_name))
+      )
     } else {
       paste("environment", name)
     }
   } else {
+    # TODO: (RK) Pre-compute cache of environments.
     frame_text(parent.env(frame))
   }
 }
@@ -66,6 +86,19 @@ trim_call <- function(pre_call_text) {
 }
 
 sanitize_message <- function(msg) {
-  strsplit(msg, " : ")[[1]][2]
+  strsplit(msg, ": ")[[1]][2]
 }
 
+strip_hidden <- function(trace) {
+  Filter(function(line) {
+    !identical(attr(line, "pkg"), "bettertrace")
+  }, trace)
+}
+
+safe_color <- function(msg, color) {
+  if (grepl("\033", msg, fixed = TRUE)) {
+    msg
+  } else {
+    get(color)(msg)
+  }
+}
