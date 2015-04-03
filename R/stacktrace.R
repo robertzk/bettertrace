@@ -60,7 +60,7 @@ file_description <- function(call, frame, ref) {
 }
 
 ref_text <- function(frame, ref) {
-  file <- attr(ref, "srcfile")$filename
+  file <- ref_filename(ref)
   if (nzchar(file)) {
     file <- normalizePath(file)
     paste0(decorate_file(file), ":", crayon::bold(as.character(ref[1L])),
@@ -138,3 +138,4 @@ decorate_file <- function(file) {
 
 # For mockability in tests
 is.namespace <- function(env) isNamespace(env)
+ref_filename <- function(ref) attr(ref, "srcfile")$filename

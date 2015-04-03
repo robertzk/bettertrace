@@ -62,14 +62,8 @@ with_options(error = stacktrace, {
       foo <- function() { bar() + 1 }
       bar <- function() { baz() + 1 }
     "), {
-      package_stub("base", "attr", function(x, which) {
-        out <- .Primitive("attr")(x, which)
-        if ("filename" %in% names(out) && nzchar(out$filename)) 
-          out$filename <- ""
-        out
-      }, 
-        not(expect_match)(eval_in(foo()), "foo\\.R")
-      )
+      package_stub("bettertrace", "ref_filename", function(ref) "", 
+        not(expect_match)(eval_in(foo()), "foo\\.R"))
     })
   })
 
