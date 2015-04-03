@@ -1,9 +1,13 @@
 eval_in <- function(expr, file = "foo.R") {
-  eval.parent(substitute({
-    eval(bquote(magic_dump({
-      interactive <- function(...) TRUE
-      source(.(file.path(tempdir, file)), keep.source = TRUE)
-      expr
-    })))
-  }))
+  paste(collapse = "\n", eval.parent(substitute({
+    file <- tempfile()
+    on.exit(unlink(file))
+    try(silent = TRUE, capture.output(file = file,
+      withCallingHandlers(error = function(e) stacktrace(), {
+        source(file.path(tempdir, file))
+        expr
+      })
+    ))
+    readLines(file)
+  })))
 }

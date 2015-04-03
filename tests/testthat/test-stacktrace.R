@@ -15,4 +15,13 @@ with_options(error = stacktrace, {
       expect_match(eval_in(foo()), "foo\\.R:3: baz\\(\\) \\+ 1")
     })
   })
+
+  test_that("it prints a nice stacktrace on a more involved error", {
+    within_file_structure(list("foo.R" = "
+      foo <- function() { bar() + 1 }
+      bar <- function() { baz() + 1 }
+    "), {
+      eval_in(foo())
+    })
+  })
 })
