@@ -76,13 +76,15 @@ frame_text <- function(frame) {
   } else if (nzchar(name <- environmentName(frame))) {
     if (isNamespace(frame)) {
       structure(pkg = name,
-        paste("package internals of", crayon::green(name))
+        paste("package", crayon::green(name))
       )
-    } else if (grepl("^(package|imports):", name)) {
-      pkg_name <- strsplit(name, ":")[[1]][2]
-      structure(pkg = pkg_name,
-        paste("package", crayon::green(pkg_name))
-      )
+    # TODO: (RK) Temporarily disabled until I figure out if there is a way
+    # to tell between namespace and package env calls on the stack trace!
+    # } else if (grepl("^(package|imports):", name)) {
+    #  pkg_name <- strsplit(name, ":")[[1]][2]
+    #  structure(pkg = pkg_name,
+    #    paste("package", crayon::green(pkg_name))
+    #  )
     } else {
       paste("environment", name)
     }

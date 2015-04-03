@@ -18,5 +18,6 @@ Suggests:
     knitr,
     microbenchmark,
     testthat,
-    testthatsomemore
+    testthatsomemore,
+    devtools
 Roxygen: list(wrap = FALSE)

@@ -7,6 +7,7 @@ with_options(error = stacktrace, {
   })
 
   test_that("it prints a nice stacktrace on a more involved error", {
+    on.exit(rm(list = c("foo", "bar"), envir = .GlobalEnv), add = TRUE)
     within_file_structure(list("foo.R" = "
       foo <- function() { bar() + 1 }
       bar <- function() { baz() + 1 }
@@ -16,12 +17,17 @@ with_options(error = stacktrace, {
     })
   })
 
-  test_that("it prints a nice stacktrace on a more involved error", {
+  test_that("it prints a stack trace with a custom package", {
+    on.exit(rm(list = c("faw", "bar"), envir = .GlobalEnv), add = TRUE)
     within_file_structure(list("foo.R" = "
-      foo <- function() { bar() + 1 }
-      bar <- function() { baz() + 1 }
+      faw <- function(...) { bar(...) + 1 }
+      bar <- function(...) { foo(...) + 1 }
     "), {
-      eval_in(foo())
+      load_all("packages/package1")
+      expect_output(eval_in(foo()), "one")
+      not(expect_output)(eval_in(foo(1)), "one")
+      expect_output(eval_in(foo(1)), "package package1: foo\\(1\\)")
+      expect_output(eval_in(foo(1)), "foo\\.R:5: squawk\\(\\)")
     })
   })
 })
