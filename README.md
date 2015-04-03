@@ -1,4 +1,4 @@
-Better Stack Trace for R [![Build Status](https://travis-ci.org/robertzk/bettertrace)](https://travis-ci.org/robertzk/bettertrace.svg) [![Coverage Status](https://coveralls.io/repos/robertzk/bettertrace/badge.svg?branch=master)](https://coveralls.io/r/robertzk/bettertrace)
+Better Stack Trace for R [![Build Status](https://travis-ci.org/robertzk/bettertrace.svg)](https://travis-ci.org/robertzk/bettertrace) [![Coverage Status](https://coveralls.io/repos/robertzk/bettertrace/badge.svg)](https://coveralls.io/r/robertzk/bettertrace)
 ===========
 
 R has long suffered from poor stack tracing capabilities. This package aims to make
