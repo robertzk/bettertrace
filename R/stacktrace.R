@@ -76,7 +76,7 @@ frame_text <- function(frame) {
       "global environment"
     )
   } else if (nzchar(name <- environmentName(frame))) {
-    if (isNamespace(frame)) {
+    if (is.namespace(frame)) {
       structure(pkg = name,
         paste("package", crayon::green(as.character(name)))
       )
@@ -135,3 +135,6 @@ safe_color <- function(msg, color) {
 decorate_file <- function(file) {
   file.path(dirname(file), crayon::yellow(basename(file)))
 }
+
+# For mockability in tests
+is.namespace <- function(env) isNamespace(env)

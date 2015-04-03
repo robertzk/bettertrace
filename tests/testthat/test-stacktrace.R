@@ -82,4 +82,15 @@ with_options(error = stacktrace, {
       expect_match(eval_in(foo()), "In <environment: 0x[0-9a-f]+>: foo()")
     })
   })
+
+  test_that("it can print a non-namespace name", {
+    on.exit(rm(list = c("foo", "bar"), envir = .GlobalEnv), add = TRUE)
+    within_file_structure(list("foo.R" = "
+      foo <- function() { bar() + 1 }
+      bar <- function() { baz() + 1 }
+    "), {
+      package_stub("bettertrace", "is.namespace", function(...) FALSE,
+        expect_match(eval_in(foo()), "In environment"))
+    })
+  })
 })
