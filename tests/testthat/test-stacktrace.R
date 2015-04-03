@@ -30,4 +30,16 @@ with_options(error = stacktrace, {
       expect_output(eval_in(foo(1)), "foo\\.R:5: squawk\\(\\)")
     })
   })
+
+  test_that("prints the error message nicely", {
+    on.exit(rm(list = c("foo", "bar"), envir = .GlobalEnv), add = TRUE)
+    within_file_structure(list("foo.R" = "
+      foo <- function() { bar() + 1 }
+      bar <- function() { baz() + 1 }
+    "), {
+      package_stub("base", "geterrmessage", function(...) "Error: errmsgyo",
+        expect_match(eval_in(foo()), "Error: errmsgyo")
+      )
+    })
+  })
 })
