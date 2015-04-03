@@ -42,4 +42,14 @@ with_options(error = stacktrace, {
       )
     })
   })
+
+  test_that("it cannot match filenames if the srcref has no file", {
+    on.exit(rm(list = c("foo", "bar"), envir = .GlobalEnv), add = TRUE)
+    within_file_structure(list("foo.R" = "
+      foo <- function() { bar() + 1 }
+      bar <- function() { baz() + 1 }
+    "), {
+      not(expect_match)(eval_in(foo(), keep.source = FALSE), "foo\\.R")
+    })
+  })
 })

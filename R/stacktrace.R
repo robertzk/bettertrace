@@ -76,7 +76,7 @@ frame_text <- function(frame) {
   } else if (nzchar(name <- environmentName(frame))) {
     if (isNamespace(frame)) {
       structure(pkg = name,
-        paste("package", crayon::green(name))
+        paste("package", crayon::green(as.character(name)))
       )
     # TODO: (RK) Temporarily disabled until I figure out if there is a way
     # to tell between namespace and package env calls on the stack trace!
