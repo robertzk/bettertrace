@@ -9,5 +9,8 @@ magic_dump <- function(call) {
   })
   squish <- function(x) paste(x, collapse = "\n")
   writeLines(squish(deparse(call)), file)
-  squish(system(sprintf("Rscript -e 'source(\"%s\")'", file), intern = TRUE))
+  squish(system(
+    sprintf("Rscript -e 'source(\"%s\")'", file),
+    intern = TRUE, ignore.stderr = TRUE
+  ))
 }

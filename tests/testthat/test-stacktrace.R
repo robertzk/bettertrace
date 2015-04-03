@@ -10,10 +10,9 @@ with_options(error = stacktrace, {
     within_file_structure(list("foo.R" = "
       foo <- function() { bar() + 1 }
       bar <- function() { baz() + 1 }
-      bar() + 1
     "), {
-      debugonce(stacktrace)
-      source(file.path(tempdir, "foo.R"))
+      expect_match(eval_in(foo()), "foo\\.R:2: bar\\(\\) \\+ 1")
+      expect_match(eval_in(foo()), "foo\\.R:3: baz\\(\\) \\+ 1")
     })
   })
 })
