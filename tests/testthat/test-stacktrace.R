@@ -41,7 +41,7 @@ with_options(error = stacktrace, {
         expect_match(eval_in(foo()), "Error: errmsgyo")
       )
       package_stub("base", "geterrmessage", function(...) "Error: errmsgyo\033",
-        expect_match(eval_in(foo()), "Error: errmsgyo")
+        expect_match(eval_in(foo()), "Error: errmsgyo\033")
       )
     })
   })
