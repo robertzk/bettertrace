@@ -72,7 +72,9 @@ ref_text <- function(frame, ref) {
 
 frame_text <- function(frame) {
   if (identical(frame, .GlobalEnv)) {
-    "global environment"
+    structure(pkg = "_global",
+      "global environment"
+    )
   } else if (nzchar(name <- environmentName(frame))) {
     if (isNamespace(frame)) {
       structure(pkg = name,
@@ -90,7 +92,12 @@ frame_text <- function(frame) {
     }
   } else {
     # TODO: (RK) Pre-compute cache of environments.
-    frame_text(parent.env(frame))
+    frame_text <- frame_text(parent.env(frame))
+    if (identical(attr(frame_text, "pkg"), "_global")) {
+      capture.output(print(frame))
+    } else {
+      frame_text
+    }
   }
 }
 

@@ -72,4 +72,14 @@ with_options(error = stacktrace, {
       )
     })
   })
+
+  test_that("It can see it is getting called from a local environment", {
+    on.exit(rm(list = c("foo", "bar"), envir = .GlobalEnv), add = TRUE)
+    within_file_structure(list("foo.R" = "
+      foo <- function() { bar() + 1 }
+      bar <- function() { baz() + 1 }
+    "), {
+      expect_match(eval_in(foo()), "In <environment: 0x[0-9a-f]+>: foo()")
+    })
+  })
 })
