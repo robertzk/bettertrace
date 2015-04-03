@@ -1,3 +1,5 @@
+`%||%` <- function(x, y) if (is.null(x)) y else x
+
 previous_error <- new.env()
 
 .onLoad <- function(pkgName, libPath) {
