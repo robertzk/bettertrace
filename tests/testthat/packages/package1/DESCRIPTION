@@ -1,0 +1,10 @@
+Package: package1
+Title: This is a package
+Version: 0.1
+Authors@R: c(person("Robert", "Krzyzanowski",
+    email = "technoguyrob@gmail.com", role = c("aut", "cre")))
+Description: It does package.
+Depends: R
+License: MIT
+Suggests: testthat, testthatsomemore, knitr
+LazyData: true

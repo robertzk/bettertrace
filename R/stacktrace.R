@@ -60,7 +60,7 @@ file_description <- function(call, frame, ref) {
 }
 
 ref_text <- function(frame, ref) {
-  file <- attr(ref, "srcfile")$filename
+  file <- ref_filename(ref)
   if (nzchar(file)) {
     file <- normalizePath(file)
     paste0(decorate_file(file), ":", crayon::bold(as.character(ref[1L])),
@@ -72,23 +72,32 @@ ref_text <- function(frame, ref) {
 
 frame_text <- function(frame) {
   if (identical(frame, .GlobalEnv)) {
-    "global environment"
+    structure(pkg = "_global",
+      "global environment"
+    )
   } else if (nzchar(name <- environmentName(frame))) {
-    if (isNamespace(frame)) {
+    if (is.namespace(frame)) {
       structure(pkg = name,
-        paste("package internals of", crayon::green(name))
+        paste("package", crayon::green(as.character(name)))
       )
-    } else if (grepl("^(package|imports):", name)) {
-      pkg_name <- strsplit(name, ":")[[1]][2]
-      structure(pkg = pkg_name,
-        paste("package", crayon::green(pkg_name))
-      )
+    # TODO: (RK) Temporarily disabled until I figure out if there is a way
+    # to tell between namespace and package env calls on the stack trace!
+    # } else if (grepl("^(package|imports):", name)) {
+    #  pkg_name <- strsplit(name, ":")[[1]][2]
+    #  structure(pkg = pkg_name,
+    #    paste("package", crayon::green(pkg_name))
+    #  )
     } else {
       paste("environment", name)
     }
   } else {
     # TODO: (RK) Pre-compute cache of environments.
-    frame_text(parent.env(frame))
+    frame_text <- frame_text(parent.env(frame))
+    if (identical(attr(frame_text, "pkg"), "_global")) {
+      capture.output(print(frame))
+    } else {
+      frame_text
+    }
   }
 }
 
@@ -126,3 +135,7 @@ safe_color <- function(msg, color) {
 decorate_file <- function(file) {
   file.path(dirname(file), crayon::yellow(basename(file)))
 }
+
+# For mockability in tests
+is.namespace <- function(env) isNamespace(env)
+ref_filename <- function(ref) attr(ref, "srcfile")$filename
