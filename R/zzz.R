@@ -1,14 +1,14 @@
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-previous_error <- new.env()
+.bettertrace_env <- new.env()
 
 .onLoad <- function(pkgName, libPath) {
   packageStartupMessage("Package ", sQuote("bettertrace"), " overwriting ", sQuote('options("error")'), "\n")
-  previous_error$error <- getOption("error")
+  .bettertrace_env$error <- getOption("error")
   options(error = stacktrace)
 }
 
 .onUnLoad <- function() {
-  options(error = previous_error$error)
+  options(error = .bettertrace_env$error)
 }
 
