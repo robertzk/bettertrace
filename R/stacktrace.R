@@ -30,7 +30,6 @@ stacktrace <- function() {
   # do not trigger a stack trace.
   on.exit(.Internal(seterrmessage("")), add = TRUE)
 
-
   if (length(trace) > 1 && nzchar(msg)) {
     cat(sep = "",
       paste(trace, collapse = "\n"), "\n\n",
