@@ -8,9 +8,9 @@ evil_overwrite_try <- function() {
   # Because try is the only guy in base R that sets the error message eventually
   # retrievable using geterrmessage, and there is no other way to detect
   # ctrl+C without modifying base R, we do some evil.
-  unlockBinding("try", envir = baseenv())
-  body(try) <- body(evil_try) {
-  lockBinding("try", envir = baseenv())
+  unlockBinding("try", env = baseenv())
+  body(try) <- body(evil_try)
+  lockBinding("try", env = baseenv())
 
   packageStartupMessage("bettertrace.overwrite_try set, overwriting base::try")
 }
