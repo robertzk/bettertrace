@@ -25,8 +25,13 @@ stacktrace <- function() {
   trace <- Map(call_description, sys.calls(), sys.frames())
   trace <- strip_hidden(trace)
   msg   <- sanitize_message(geterrmessage())
+  
+  # We need to clear the internal error message so that ctrl+C interrupts
+  # do not trigger a stack trace.
+  on.exit(.Internal(seterrmessage("")), add = TRUE)
 
-  if (length(trace) > 1) {
+
+  if (length(trace) > 1 && nzchar(msg)) {
     cat(sep = "",
       paste(trace, collapse = "\n"), "\n\n",
       if (!is.na(msg)) {

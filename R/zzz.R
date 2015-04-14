@@ -6,8 +6,6 @@
   packageStartupMessage("Package ", sQuote("bettertrace"), " overwriting ", sQuote('options("error")'), "\n")
   .bettertrace_env$error <- getOption("error")
   options(error = stacktrace)
-
-  evil_overwrite_try()
 }
 
 .onUnLoad <- function() {

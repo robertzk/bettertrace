@@ -13,6 +13,6 @@ test_that("unload hook works", {
     package_stub("base", "options", function(error) {
       deparse(substitute(error))
     }, .onUnLoad()),
-    "previous_error$error"
+    ".bettertrace_env$error"
   )
 })
