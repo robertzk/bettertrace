@@ -2,8 +2,9 @@
 
 .bettertrace_env <- new.env()
 
-.onLoad <- function(pkgName, libPath) {
-  packageStartupMessage("Package ", sQuote("bettertrace"), " overwriting ", sQuote('options("error")'), "\n")
+.onLoad <- function(libPath, pkgName) {
+  packageStartupMessage("Package ", sQuote("bettertrace"), " overwriting ",
+                        sQuote('options("error")'), "\n")
   .bettertrace_env$error <- getOption("error")
   options(error = stacktrace)
 }
