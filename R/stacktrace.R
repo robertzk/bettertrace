@@ -28,7 +28,7 @@ stacktrace <- function() {
   
   # We need to clear the internal error message so that ctrl+C interrupts
   # do not trigger a stack trace.
-  on.exit(.Internal(seterrmessage("")), add = TRUE)
+  on.exit(getFromNamespace(".Internal", "base")(seterrmessage("")), add = TRUE)
 
   if (length(trace) > 1 && nzchar(msg)) {
     cat(sep = "",
