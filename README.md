@@ -35,6 +35,8 @@ This is much more informative than the built-in message:
 Error in bar() : could not find function "baz"
 ```
 
+![worse trace example](images/worsetrace.png)
+
 Installation
 ------------
 
