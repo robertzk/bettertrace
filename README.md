@@ -26,6 +26,8 @@ foo()
 # could not find function "baz"
 ```
 
+![bettertrace example](images/bettertrace.png)
+
 This is much more informative than the built-in message:
 
 ```
