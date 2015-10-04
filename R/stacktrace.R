@@ -1,6 +1,6 @@
 #' A traceback function to be used with error handling.
 #'
-#' To use, call \options{error = stacktrace}, which will be called
+#' To use, call \code{options(error = stacktrace)}, which will be called
 #' by default when this package is loaded.
 #'
 #' @export
