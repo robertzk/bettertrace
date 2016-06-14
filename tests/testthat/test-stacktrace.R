@@ -3,7 +3,7 @@ library(testthatsomemore)
 
 with_options(error = stacktrace, { 
   test_that("it does not print a stacktrace on a simple error", {
-    expect_output(try(silent = TRUE, foo()), "")
+    expect_output(try(silent = TRUE, foob()), "")
   })
 
   test_that("it prints a nice stacktrace on a more involved error", {
@@ -23,9 +23,9 @@ with_options(error = stacktrace, {
       faw <- function(...) { bar(...) + 1 }
       bar <- function(...) { foo(...) + 1 }
     "), {
-      load_all("packages/package1")
+      devtools::load_all("packages/package1")
       expect_output(eval_in(foo()), "one")
-      not(expect_output)(eval_in(foo(1)), "one")
+      expect_output(eval_in(foo(1)), "one", positive = FALSE)
       expect_output(eval_in(foo(1)), "package package1: foo\\(1\\)")
       expect_output(eval_in(foo(1)), "foo\\.R:5: squawk\\(\\)")
     })
@@ -52,7 +52,7 @@ with_options(error = stacktrace, {
       foo <- function() { bar() + 1 }
       bar <- function() { baz() + 1 }
     "), {
-      not(expect_match)(eval_in(foo(), keep.source = FALSE), "foo\\.R")
+      expect_false(grepl("foo\\.R:", eval_in(foo(), keep.source = FALSE)))
     })
   })
 
@@ -63,7 +63,7 @@ with_options(error = stacktrace, {
       bar <- function() { baz() + 1 }
     "), {
       package_stub("bettertrace", "ref_filename", function(ref) "", 
-        not(expect_match)(eval_in(foo()), "foo\\.R"))
+        expect_output(eval_in(foo()), "foo\\.R:", positive = FALSE))
     })
   })
 
