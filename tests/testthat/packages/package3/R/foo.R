@@ -7,3 +7,4 @@ foo <- function(x) {
     super::super("deux")
   }
 }
+
