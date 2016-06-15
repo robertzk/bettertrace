@@ -2,7 +2,7 @@ Package: bettertrace
 Type: Package
 Title: bettertrace (http://github.com/robertzk/bettertrace)
 Description: A better stack trace for R.
-Version: 0.1.1
+Version: 0.1.2
 Author: Robert Krzyzanowski <technoguyrob@gmail.com>
 Maintainer: Robert Krzyzanowski <technoguyrob@gmail.com>
 Authors@R: c(person("Robert", "Krzyzanowski",
