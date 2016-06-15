@@ -7,7 +7,6 @@ with_options(error = stacktrace, {
   })
 
   test_that("it prints a nice stacktrace on a more involved error", {
-    on.exit(rm(list = c("foo", "bar"), envir = .GlobalEnv), add = TRUE)
     within_file_structure(list("foo.R" = "
       foo <- function() { bar() + 1 }
       bar <- function() { baz() + 1 }
@@ -18,7 +17,6 @@ with_options(error = stacktrace, {
   })
 
   test_that("it prints a stack trace with a custom package", {
-    on.exit(rm(list = c("faw", "bar"), envir = .GlobalEnv), add = TRUE)
     within_file_structure(list("foo.R" = "
       faw <- function(...) { bar(...) + 1 }
       bar <- function(...) { foo(...) + 1 }
@@ -32,7 +30,6 @@ with_options(error = stacktrace, {
   })
 
   test_that("prints the error message nicely", {
-    on.exit(rm(list = c("foo", "bar"), envir = .GlobalEnv), add = TRUE)
     within_file_structure(list("foo.R" = "
       foo <- function() { bar() + 1 }
       bar <- function() { baz() + 1 }
@@ -47,7 +44,6 @@ with_options(error = stacktrace, {
   })
 
   test_that("it cannot match filenames if the srcref has no file", {
-    on.exit(rm(list = c("foo", "bar"), envir = .GlobalEnv), add = TRUE)
     within_file_structure(list("foo.R" = "
       foo <- function() { bar() + 1 }
       bar <- function() { baz() + 1 }
@@ -57,7 +53,6 @@ with_options(error = stacktrace, {
   })
 
   test_that("it cannot match filenames if the srcref has no file (mocked)", {
-    on.exit(rm(list = c("foo", "bar"), envir = .GlobalEnv), add = TRUE)
     within_file_structure(list("foo.R" = "
       foo <- function() { bar() + 1 }
       bar <- function() { baz() + 1 }
@@ -73,18 +68,30 @@ with_options(error = stacktrace, {
       foo <- function() { bar() + 1 }
       bar <- function() { baz() + 1 }
     "), {
-      expect_match(eval_in(foo()), "In <environment: 0x[0-9a-f]+>: foo()")
+      expect_match(eval_in(foo(), global = TRUE), "In <environment: 0x[0-9a-f]+>: foo()")
     })
   })
 
   test_that("it can print a non-namespace name", {
-    on.exit(rm(list = c("foo", "bar"), envir = .GlobalEnv), add = TRUE)
     within_file_structure(list("foo.R" = "
       foo <- function() { bar() + 1 }
       bar <- function() { baz() + 1 }
     "), {
       package_stub("bettertrace", "is.namespace", function(...) FALSE,
         expect_match(eval_in(foo()), "In environment"))
+    })
+  })
+
+  test_that("it can use custom environment labels", {
+    within_file_structure(list("foo.R" = "
+      foo <- function() { bar() + 1 }
+      bar <- function() { baz() + 1 }
+      attr(environment(foo), 'stacktrace_label') <- 'foo function'
+    "), {
+      package_stub("bettertrace", "is.namespace", function(...) FALSE, {
+        output <- eval_in(foo(), keep.source = FALSE)
+        expect_match(output, "In foo function:")
+      })
     })
   })
 })

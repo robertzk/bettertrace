@@ -94,9 +94,11 @@ frame_text <- function(frame) {
     } else {
       paste("environment", name)
     }
+  } else if (!is.null(name <- attr(frame, "stacktrace_label"))) {
+    name
   } else {
     # TODO: (RK) Pre-compute cache of environments.
-    frame_text <- frame_text(parent.env(frame))
+    frame_text <- Recall(parent.env(frame))
     if (identical(attr(frame_text, "pkg"), "_global")) {
       capture.output(print(frame))
     } else {
