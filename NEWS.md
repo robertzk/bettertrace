@@ -1,3 +1,8 @@
+# Version 0.1.3
+
+  * Fix error message filtering so that it does not remove "foo" 
+    in "error: foo: bar"
+
 # Version 0.1.2
 
   * Environments with a `stacktrace_label` attribute display a custom
