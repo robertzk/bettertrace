@@ -121,7 +121,7 @@ trim_call <- function(pre_call_text) {
 }
 
 sanitize_message <- function(msg) {
-  gsub("^Error.*: ", "", as.character(msg))
+  gsub("^Error[^:]*: ", "", as.character(msg))
 }
 
 strip_hidden <- function(trace) {
